@@ -1,6 +1,6 @@
 # go-dyip
 
-A ddns client and server 
+A ddns client and server [GitHub](https://github.com/za-zliea/go-dyip)
 
 ## Feature
 
