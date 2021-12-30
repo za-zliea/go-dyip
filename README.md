@@ -82,6 +82,25 @@ Options:
   -g	generate config, default client.conf
 ```
 
+## Docker
+
+### Server
+
+[Docker Hub](https://hub.docker.com/r/zliea/dyip-server)
+
+```shell
+docker run -d -p 8080:8080 --name dyip-server -v ./:/etc/dyip zliea/dyip-server:latest
+```
+
+### Client
+
+[Docker Hub](https://hub.docker.com/r/zliea/dyip-client)
+
+```shell
+docker run -d --name dyip-client -v ./:/etc/dyip zliea/dyip-client:latest
+```
+
+
 ## Config
 
 ### Server Config
