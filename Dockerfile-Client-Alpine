@@ -1,0 +1,14 @@
+FROM alpine:latest
+
+ENV CONFIG_DIR=/etc/dyip
+
+RUN apk add --no-cache ca-certificates \
+ && update-ca-certificates \
+ && rm -rf /var/cache/apk/* \
+ && mkdir ${CONFIG_DIR}
+
+ADD output/dyip-client /usr/local/bin
+ADD script/docker-entrypoint-client.sh /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["dyip-client"]
