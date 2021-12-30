@@ -26,6 +26,11 @@ A ddns client and server
 
 ## Build
 
+### Prerequirements
+
+- golang
+- make
+
 ### Without Docker
 
 ```shell
