@@ -36,13 +36,14 @@ A ddns client and server [GitHub](https://github.com/za-zliea/go-dyip)
 ### Without Docker
 
 ```shell
-make clean build
+make all
 ```
 
 ### With Docker
 
 ```shell
-make all
+make image
+make image-apline
 ```
 
 ## Usage

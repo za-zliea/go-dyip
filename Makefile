@@ -71,5 +71,7 @@ version:
 	if [ -n "$(VERSION)" ]; then mv $(OUTPUT_DIR)/dyip-server_darwin_arm64 $(OUTPUT_DIR)/dyip-server_$(VERSION)_darwin_arm64; fi
 all: clean build-all
 release: clean build-all version
-image: clean build docker push
-image-alpine: clean build docker-alpine push-alpine
+image: clean build docker
+image-push: image push
+image-alpine: clean build docker-alpine
+image-alpine-push: image-alpine push-alpine
