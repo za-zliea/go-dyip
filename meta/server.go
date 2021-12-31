@@ -4,7 +4,7 @@ type ServerMeta struct {
 	Address string             `yaml:"address"`
 	Port    int                `yaml:"port"`
 	Token   string             `yaml:"token"`
-	RealIp  *string            `yaml:"realip"`
+	RealIp  *string            `yaml:"realip,omitempty"`
 	Metas   []*IpMeta          `yaml:"ips"`
 	MetaMap map[string]*IpMeta `yaml:"-"`
 }

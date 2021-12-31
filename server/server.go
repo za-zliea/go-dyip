@@ -18,11 +18,11 @@ type IpResponse struct {
 }
 
 type IpmResponse struct {
-	Domain    string   `json:"domain"`    //域名
-	Subdomain string   `json:"subdomain"` //子域名
-	Ip        *string  `json:"ip"`        //ip
-	Dip       *string  `json:"dip"`       //dns
-	History   []string `json:"history"`   //ip历史
+	Domain    string   `json:"domain"`
+	Subdomain string   `json:"subdomain"`
+	Ip        *string  `json:"ip,omitempty"`
+	Dip       *string  `json:"dip,omitempty"`
+	History   []string `json:"history"`
 }
 
 func IpHandler(ctx *atreugo.RequestCtx) error {
@@ -91,7 +91,7 @@ func SyncHandler(ctx *atreugo.RequestCtx) error {
 
 	newdns := dns.NewDns()
 	dip, err := newdns.Query(ipMeta)
-	if err != nil || dip == "" {
+	if err != nil {
 		message := fmt.Sprintf("sync %s.%s-%s query provider error: %v\n", ipMeta.Subdomain, ipMeta.Domain, ip, err)
 		log.Printf(message)
 		return ctx.JSONResponse(Failed(message), 200)
@@ -131,13 +131,20 @@ func LoadHandler(ctx *atreugo.RequestCtx) error {
 	}
 
 	dip, err := dns.NewDns().Query(ipMeta)
-	if err != nil || dip == "" {
+	if err != nil {
 		message := fmt.Sprintf("load %s.%s provider error: %v", ipMeta.Subdomain, ipMeta.Domain, err)
 		log.Println(message)
 		return ctx.JSONResponse(Failed(message))
 	}
 
-	return ctx.JSONResponse(SuccessWithD(IpmResponse{Domain: ipMeta.Domain, Subdomain: ipMeta.Subdomain, Ip: ipMeta.Ip, Dip: &dip, History: ipMeta.History}), 200)
+	var _dip *string
+	if dip != "" {
+		_dip = &dip
+	} else {
+		_dip = nil
+	}
+
+	return ctx.JSONResponse(SuccessWithD(IpmResponse{Domain: ipMeta.Domain, Subdomain: ipMeta.Subdomain, Ip: ipMeta.Ip, Dip: _dip, History: ipMeta.History}), 200)
 }
 
 func authGlobal(ctx *atreugo.RequestCtx) ResponseDTO {

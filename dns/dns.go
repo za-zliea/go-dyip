@@ -22,6 +22,8 @@ func (d Dns) Query(ipMeta *meta.IpMeta) (string, error) {
 	var ip string
 	var err error
 	switch strings.ToUpper(ipMeta.Provider) {
+	case "NONE":
+		ip, err = NewNone().Query(ipMeta)
 	case "GODADDY":
 		ip, err = NewGodaddy().Query(ipMeta)
 	case "TENCENT":
@@ -40,6 +42,8 @@ func (d Dns) Query(ipMeta *meta.IpMeta) (string, error) {
 func (d Dns) Sync(ipMeta *meta.IpMeta) error {
 	var err error
 	switch strings.ToUpper(ipMeta.Provider) {
+	case "NONE":
+		err = NewNone().Sync(ipMeta)
 	case "GODADDY":
 		err = NewGodaddy().Sync(ipMeta)
 	case "TENCENT":

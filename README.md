@@ -15,12 +15,14 @@ A ddns client and server [GitHub](https://github.com/za-zliea/go-dyip)
 
 ### Support DNS Provider
 
+- NONE(Just record IP, Provide Domain end with .internal)
 - Aliyun
 - Tencent
 - Godaddy
 - Google(Dynamic DNS)
 
 *Note*
+
 - Google have no api to query DNS, use net.LookupIP instead.
 - Google use Dynamic DNS which has HTTP API.
 
@@ -100,7 +102,6 @@ docker run -d -p 8080:8080 --name dyip-server -v ./:/etc/dyip zliea/dyip-server:
 docker run -d --name dyip-client -v ./:/etc/dyip zliea/dyip-client:latest
 ```
 
-
 ## Config
 
 ### Server Config
@@ -110,8 +111,8 @@ address: 127.0.0.1                   # Listen address
 port: 8080                           # Listen port
 realip: x-real-ip                    # IP to sync from header, use remote address if empty
 token: your-token-abcde12345         # Client and server auth token
-ips:                         
-- provider: your-provider            # Support Provider (TENCENT/ALIYUN/GODADDY/GOOGLE)
+ips:
+- provider: your-provider            # Support Provider (NONE/TENCENT/ALIYUN/GODADDY/GOOGLE)
   ak: abcde12345                     # Provider ak (USERNAME/AccessKey ID ...)
   sk: abcde12345                     # Provider sk (PASSWORD/AccessKey Secret ...)
   domain: your-doamin                # Domain
