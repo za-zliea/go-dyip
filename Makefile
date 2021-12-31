@@ -55,6 +55,5 @@ push-alpine:
 clean:
 	rm -Rf $(OUTPUT_DIR)
 all: clean build-all
-release: clean build-all
 image: clean build docker push
 image-alpine: clean build docker-alpine push-alpine
