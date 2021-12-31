@@ -2,6 +2,23 @@ MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 MKFILE_DIR := $(dir $(MKFILE_PATH))
 OUTPUT_DIR := $(MKFILE_DIR)output
 
+build-all:
+	if [ ! -d $(OUTPUT_DIR) ]; then mkdir $(OUTPUT_DIR); else rm -Rf $(OUTPUT_DIR)/*; fi
+	go mod download
+	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client_windows_x64.exe client.go
+	CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o $(OUTPUT_DIR)/dyip-client_windows_x86.exe client.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client_linux_x64 client.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o $(OUTPUT_DIR)/dyip-client_linux_x86 client.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-client_linux_arm64 client.go
+	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client_darwin_x64 client.go
+	CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-client_darwin_arm64 client.go
+	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-server_windows_x64.exe server.go
+	CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o $(OUTPUT_DIR)/dyip-server_windows_x86.exe server.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-server_linux_x64 server.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o $(OUTPUT_DIR)/dyip-server_linux_x86 server.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-server_linux_arm64 server.go
+	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-server_darwin_x64 server.go
+	CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-server_darwin_arm64 server.go
 build:
 	if [ ! -d $(OUTPUT_DIR) ]; then mkdir $(OUTPUT_DIR); else rm -Rf $(OUTPUT_DIR)/*; fi
 	go mod download
@@ -37,4 +54,7 @@ push-alpine:
 	docker push zliea/dyip-server:alpine
 clean:
 	rm -Rf $(OUTPUT_DIR)
-all: clean build docker
+all: clean build-all
+release: clean build-all
+image: clean build docker push
+image-alpine: clean build docker-alpine push-alpine
