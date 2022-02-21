@@ -56,7 +56,7 @@ func (g Godaddy) Query(ipMeta *meta.IpMeta) (string, error) {
 		}
 
 		if response == nil || len(response) == 0 || response[0].Data == "" {
-			return "", errors.New("empty query response")
+			return "", nil
 		}
 
 		return response[0].Data, nil
@@ -73,7 +73,9 @@ func (g Godaddy) Query(ipMeta *meta.IpMeta) (string, error) {
 }
 
 func (g Godaddy) Sync(ipMeta *meta.IpMeta) error {
-	data := GodaddyData{Data: *ipMeta.Ip, Name: ipMeta.Subdomain, Ttl: 600, Type: "A"}
+	godaddyData := GodaddyData{Data: *ipMeta.Ip, Name: ipMeta.Subdomain, Ttl: 600, Type: "A"}
+
+	data := []GodaddyData{godaddyData}
 
 	reqBody, err := json.Marshal(&data)
 	if err != nil {
