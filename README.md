@@ -20,6 +20,7 @@ A ddns client and server [GitHub](https://github.com/za-zliea/go-dyip)
 - Tencent
 - Godaddy
 - Google(Dynamic DNS)
+- Cloudflare
 
 *Note*
 
@@ -42,8 +43,8 @@ make all
 ### With Docker
 
 ```shell
-make image
-make image-apline
+make image VERSION=[GIT TAG]
+make image-apline VERSION=[GIT TAG]
 ```
 
 ## Usage
