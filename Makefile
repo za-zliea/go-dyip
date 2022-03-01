@@ -25,6 +25,7 @@ build:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client client.go
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-server server.go
 docker:
+	docker pull ubuntu:focal
 	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-client:$(VERSION)-ubuntu -f Dockerfile-Client .; fi
 	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-client:$(VERSION) -f Dockerfile-Client .; fi
 	docker build -t zliea/dyip-client:ubuntu -f Dockerfile-Client .
@@ -34,6 +35,7 @@ docker:
 	docker build -t zliea/dyip-server:ubuntu -f Dockerfile-Server .
 	docker build -t zliea/dyip-server:latest -f Dockerfile-Server .
 docker-alpine:
+	docker pull alpine:latest
 	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-client:$(VERSION)-alpine -f Dockerfile-Client-Alpine .; fi
 	docker build -t zliea/dyip-client:alpine -f Dockerfile-Client-Alpine .
 	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-server:$(VERSION)-alpine -f Dockerfile-Server-Alpine .; fi
