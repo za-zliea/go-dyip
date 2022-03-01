@@ -32,6 +32,8 @@ func (d Dns) Query(ipMeta *meta.IpMeta) (string, error) {
 		ip, err = NewAliyun().Query(ipMeta)
 	case "GOOGLE":
 		ip, err = NewGoogle().Query(ipMeta)
+	case "CLOUDFLARE":
+		ip, err = NewCloudflare().Query(ipMeta)
 	default:
 		ip = ""
 		err = errors.New("provider not support")
@@ -52,6 +54,8 @@ func (d Dns) Sync(ipMeta *meta.IpMeta) error {
 		err = NewAliyun().Sync(ipMeta)
 	case "GOOGLE":
 		err = NewGoogle().Sync(ipMeta)
+	case "CLOUDFLARE":
+		err = NewCloudflare().Sync(ipMeta)
 	default:
 		err = errors.New("provider not support")
 	}
