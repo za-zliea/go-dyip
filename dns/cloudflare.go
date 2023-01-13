@@ -211,7 +211,7 @@ func (c Cloudflare) cloudflareId(ipMeta *meta.IpMeta) (*CloudflareId, error) {
 
 		query = req.URL.Query()
 		query.Add("name", fullDomain)
-		query.Add("type", "A")
+		query.Add("type", meta.GetProtocolDns(ipMeta.Protocol))
 		req.URL.RawQuery = query.Encode()
 
 		rsp, err = client.Do(req)

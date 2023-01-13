@@ -40,7 +40,7 @@ func Sync() error {
 			Proxy: http.ProxyFromEnvironment,
 			DialContext: func(ctx context.Context, _, address string) (net.Conn, error) {
 				dialer := net.Dialer{}
-				return dialer.DialContext(ctx, string(MetaData.Protocol), address)
+				return dialer.DialContext(ctx, meta.GetHttpDial(MetaData.Protocol), address)
 			},
 			MaxIdleConns:          100,
 			IdleConnTimeout:       90 * time.Second,
