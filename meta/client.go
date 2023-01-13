@@ -15,6 +15,7 @@ func (c *ClientMeta) Generate() {
 	c.Domain = "your-subdomain.your-doamin"
 	c.Auth = "your-doamin-token-abce12345"
 	c.Interval = 300
+	c.Protocol = IPV4
 }
 func (c *ClientMeta) Empty() bool {
 	return c.Server == "" || c.Token == ""

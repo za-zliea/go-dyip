@@ -19,7 +19,7 @@ A ddns client and server [GitHub](https://github.com/za-zliea/go-dyip)
 - Aliyun
 - Tencent
 - Godaddy
-- Google(Dynamic DNS)
+- GoogleDomain(Not Google Cloud DNS, with Dynamic DNS, not test for ipv6)
 - Cloudflare
 
 *Note*
