@@ -1,13 +1,16 @@
 package client
 
 import (
+	"context"
 	"dyip-sync/meta"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
 var MetaData meta.ClientMeta
@@ -32,7 +35,19 @@ func Sync() error {
 	URI.RawQuery = params.Encode()
 	finalUrl := URI.String()
 
-	client := &http.Client{}
+	client := &http.Client{
+		Transport: &http.Transport{
+			Proxy: http.ProxyFromEnvironment,
+			DialContext: func(ctx context.Context, _, address string) (net.Conn, error) {
+				dialer := net.Dialer{}
+				return dialer.DialContext(ctx, string(MetaData.Protocol), address)
+			},
+			MaxIdleConns:          100,
+			IdleConnTimeout:       90 * time.Second,
+			TLSHandshakeTimeout:   10 * time.Second,
+			ExpectContinueTimeout: 1 * time.Second,
+		},
+	}
 	req, err := http.NewRequest("GET", finalUrl, nil)
 	if err != nil {
 		return err

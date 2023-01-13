@@ -1,17 +1,20 @@
 module dyip-sync
 
-go 1.17
+go 1.19
+
+require (
+	github.com/google/uuid v1.3.0
+	github.com/savsgio/atreugo/v11 v11.9.8
+	gopkg.in/yaml.v2 v2.4.0
+)
 
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
-	github.com/fasthttp/router v1.4.4 // indirect
-	github.com/google/uuid v1.3.0 // indirect
-	github.com/klauspost/compress v1.13.6 // indirect
-	github.com/savsgio/atreugo/v11 v11.8.4 // indirect
-	github.com/savsgio/gotils v0.0.0-20211223103454-d0aaa54c5899 // indirect
+	github.com/fasthttp/router v1.4.14 // indirect
+	github.com/klauspost/compress v1.15.9 // indirect
+	github.com/savsgio/gotils v0.0.0-20220530130905-52f3993e8d6d // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.31.0 // indirect
+	github.com/valyala/fasthttp v1.42.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
-	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
+	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 // indirect
 )

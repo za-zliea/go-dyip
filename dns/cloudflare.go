@@ -103,7 +103,7 @@ func (c Cloudflare) Query(ipMeta *meta.IpMeta) (string, error) {
 }
 
 func (c Cloudflare) Sync(ipMeta *meta.IpMeta) error {
-	cloudflareData := CloudflareData{Content: *ipMeta.Ip, Name: fmt.Sprintf("%s.%s", ipMeta.Subdomain, ipMeta.Domain), Ttl: 300, Type: "A", Proxied: false}
+	cloudflareData := CloudflareData{Content: *ipMeta.Ip, Name: fmt.Sprintf("%s.%s", ipMeta.Subdomain, ipMeta.Domain), Ttl: 300, Type: meta.GetProtocolDns(ipMeta.Protocol), Proxied: false}
 
 	reqBody, err := json.Marshal(&cloudflareData)
 	if err != nil {
@@ -176,6 +176,7 @@ func (c Cloudflare) cloudflareId(ipMeta *meta.IpMeta) (*CloudflareId, error) {
 
 		query := req.URL.Query()
 		query.Add("name", ipMeta.Domain)
+		query.Add("type", meta.GetProtocolDns(ipMeta.Protocol))
 		query.Add("status", "active")
 		req.URL.RawQuery = query.Encode()
 

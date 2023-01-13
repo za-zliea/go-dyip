@@ -99,7 +99,7 @@ func (t Tencent) Query(ipMeta *meta.IpMeta) (string, error) {
 }
 
 func (t Tencent) query(ipMeta *meta.IpMeta) (*TencentRecordData, error) {
-	data := TencentRequest{Domain: ipMeta.Domain, Subdomain: ipMeta.Subdomain, RecordType: "A"}
+	data := TencentRequest{Domain: ipMeta.Domain, Subdomain: ipMeta.Subdomain, RecordType: meta.GetProtocolDns(ipMeta.Protocol)}
 
 	reqBody, err := json.Marshal(&data)
 	if err != nil {
@@ -156,7 +156,7 @@ func (t Tencent) Sync(ipMeta *meta.IpMeta) error {
 		RecordId:     recordData.RecordId,
 		Domain:       ipMeta.Domain,
 		SubDomain:    ipMeta.Subdomain,
-		RecordType:   "A",
+		RecordType:   meta.GetProtocolDns(ipMeta.Protocol),
 		RecordLine:   "默认",
 		RecordLineId: "0",
 		Value:        *ipMeta.Ip,

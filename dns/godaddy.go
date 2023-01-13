@@ -73,7 +73,7 @@ func (g Godaddy) Query(ipMeta *meta.IpMeta) (string, error) {
 }
 
 func (g Godaddy) Sync(ipMeta *meta.IpMeta) error {
-	godaddyData := GodaddyData{Data: *ipMeta.Ip, Name: ipMeta.Subdomain, Ttl: 600, Type: "A"}
+	godaddyData := GodaddyData{Data: *ipMeta.Ip, Name: ipMeta.Subdomain, Ttl: 600, Type: meta.GetProtocolDns(ipMeta.Protocol)}
 
 	data := []GodaddyData{godaddyData}
 
@@ -117,7 +117,7 @@ func (g Godaddy) Sync(ipMeta *meta.IpMeta) error {
 }
 
 func (Godaddy) godaddyUrl(ipMeta *meta.IpMeta) string {
-	return fmt.Sprintf("https://api.godaddy.com/v1/domains/%s/records/A/%s", ipMeta.Domain, ipMeta.Subdomain)
+	return fmt.Sprintf("https://api.godaddy.com/v1/domains/%s/records/%s/%s", ipMeta.Domain, meta.GetProtocolDns(ipMeta.Protocol), ipMeta.Subdomain)
 }
 
 func (Godaddy) godaddyAuthorization(ipMeta *meta.IpMeta) string {

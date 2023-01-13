@@ -1,11 +1,12 @@
 package meta
 
 type ClientMeta struct {
-	Server   string `yaml:"server"`
-	Token    string `yaml:"token"`
-	Domain   string `yaml:"domain"`
-	Auth     string `yaml:"auth"`
-	Interval int    `yaml:"interval"`
+	Server   string   `yaml:"server"`
+	Token    string   `yaml:"token"`
+	Domain   string   `yaml:"domain"`
+	Protocol Protocol `yaml:"protocol"`
+	Auth     string   `yaml:"auth"`
+	Interval int      `yaml:"interval"`
 }
 
 func (c *ClientMeta) Generate() {

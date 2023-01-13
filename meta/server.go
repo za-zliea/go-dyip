@@ -16,6 +16,7 @@ type IpMeta struct {
 	Domain          string   `yaml:"domain"`
 	Subdomain       string   `yaml:"subdomain"`
 	Auth            string   `yaml:"auth"`
+	Protocol        Protocol `yaml:"protocol"`
 	Ip              *string  `yaml:"ip,omitempty"`
 	History         []string `yaml:"history,omitempty"`
 }
@@ -29,6 +30,7 @@ func (s *ServerMeta) Generate() {
 		Domain:          "your-doamin",
 		Subdomain:       "your-subdomain",
 		Auth:            "your-doamin-token-abce12345",
+		Protocol:        "IPV4",
 		Ip:              nil,
 		History:         nil,
 	}

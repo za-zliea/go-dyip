@@ -120,6 +120,7 @@ ips:
   domain: your-doamin                # Domain
   subdomain: your-subdomain          # Subdomain
   auth: your-doamin-token-abce12345  # Client and server domain auth token
+  protocol: IPV4                     # IPV4/IPV6 protocol
 ```
 
 ### Client Config
@@ -130,4 +131,5 @@ token: your-token-abcde12345         # Client and server auth token
 domain: your-subdomain.your-doamin   # Full domain
 auth: your-doamin-token-abce12345    # Client and server domain auth token
 interval: 300                        # Sync interval (second)
+protocol: IPV4                       # IPV4/IPV6 protocol
 ```

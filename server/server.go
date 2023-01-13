@@ -4,6 +4,7 @@ import (
 	"dyip-sync/config"
 	"dyip-sync/dns"
 	"dyip-sync/meta"
+	"dyip-sync/util"
 	"errors"
 	"fmt"
 	"github.com/savsgio/atreugo/v11"
@@ -61,6 +62,17 @@ func SyncHandler(ctx *atreugo.RequestCtx) error {
 	if ip == "" {
 		log.Printf("sync %s.%s-%s error: no ip\n", ipMeta.Subdomain, ipMeta.Domain, ip)
 		return ctx.JSONResponse(Failed("no ip"), 200)
+	}
+
+	protocol, err := util.GetIpFamily(ip)
+	if err != nil {
+		log.Printf("sync %s.%s-%s error: check ip protocol empty\n", ipMeta.Subdomain, ipMeta.Domain, ip)
+		return ctx.JSONResponse(Failed("protocol empty"), 200)
+	}
+
+	if ipMeta.Protocol != protocol {
+		log.Printf("sync %s.%s-%s error: check ip protocol not match\n", ipMeta.Subdomain, ipMeta.Domain, ip)
+		return ctx.JSONResponse(Failed("protocol not match"), 200)
 	}
 
 	if ipMeta.Ip != nil && *ipMeta.Ip == ip {

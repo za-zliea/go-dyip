@@ -76,7 +76,7 @@ func (a Aliyun) query(ipMeta *meta.IpMeta) (*AliyunQueryRecordDataResponse, erro
 	params := make(map[string]string)
 
 	params["SubDomain"] = fmt.Sprintf("%s.%s", ipMeta.Subdomain, ipMeta.Domain)
-	params["Type"] = "A"
+	params["Type"] = meta.GetProtocolDns(ipMeta.Protocol)
 	params["DomainName"] = ipMeta.Domain
 	params["Line"] = "default"
 
@@ -131,7 +131,7 @@ func (a Aliyun) Sync(ipMeta *meta.IpMeta) error {
 
 	params["RecordId"] = recordData.RecordId
 	params["RR"] = ipMeta.Subdomain
-	params["Type"] = "A"
+	params["Type"] = meta.GetProtocolDns(ipMeta.Protocol)
 	params["Value"] = *ipMeta.Ip
 	params["TTL"] = "600"
 	params["Priority"] = "1"
