@@ -178,6 +178,7 @@ func authDomain(ctx *atreugo.RequestCtx) (*meta.IpMeta, error) {
 	domain := string(ctx.QueryArgs().Peek("domain"))
 	domainAuth := string(ctx.QueryArgs().Peek("auth"))
 
+	ipMeta, ok := MetaData.MetaMap[domain]
 	if !ok {
 		return nil, errors.New(fmt.Sprintf("domain %s auth failed", domain))
 	}
