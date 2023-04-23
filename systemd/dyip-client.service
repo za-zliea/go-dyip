@@ -1,0 +1,15 @@
+[Unit]
+Description=DyIP Service
+Documentation=https://github.com/za-zliea/go-dyip
+After=syslog.target network-online.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=nobody
+NoNewPrivileges=true
+ExecStart=/usr/local/bin/dyip-client -c /etc/dyip/client.conf
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
