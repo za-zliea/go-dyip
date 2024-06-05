@@ -32,6 +32,32 @@ func Sync() error {
 	params.Set("domain", MetaData.Domain)
 	params.Set("auth", MetaData.Auth)
 
+	if MetaData.Local {
+		iface, err := net.InterfaceByName(MetaData.Interface)
+		if err != nil {
+			return err
+		}
+
+		addrs, err := iface.Addrs()
+		if err != nil {
+			return err
+		}
+
+		for _, addr := range addrs {
+			if ipnet, ok := addr.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+				if MetaData.Protocol == meta.IPV4 && ipnet.IP.To4() != nil {
+					params.Set("localip", ipnet.IP.String())
+					break
+				}
+
+				if MetaData.Protocol == meta.IPV6 && ipnet.IP.To16() != nil {
+					params.Set("localip", ipnet.IP.String())
+					break
+				}
+			}
+		}
+	}
+
 	URI.RawQuery = params.Encode()
 	finalUrl := URI.String()
 

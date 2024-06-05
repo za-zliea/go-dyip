@@ -11,12 +11,13 @@ type ServerMeta struct {
 
 type IpMeta struct {
 	Provider        string   `yaml:"provider"`
-	Accesskey       string   `yaml:"ak"`
-	AccessKeySecret string   `yaml:"sk"`
+	Accesskey       string   `yaml:"ak,omitempty"`
+	AccessKeySecret string   `yaml:"sk,omitempty"`
 	Domain          string   `yaml:"domain"`
 	Subdomain       string   `yaml:"subdomain"`
 	Auth            string   `yaml:"auth"`
 	Protocol        Protocol `yaml:"protocol"`
+	Local           bool     `yaml:"local"`
 	Ip              *string  `yaml:"ip,omitempty"`
 	History         []string `yaml:"history,omitempty"`
 }
@@ -31,6 +32,7 @@ func (s *ServerMeta) Generate() {
 		Subdomain:       "your-subdomain",
 		Auth:            "your-doamin-token-abce12345",
 		Protocol:        "IPV4",
+		Local:           false,
 		Ip:              nil,
 		History:         nil,
 	}

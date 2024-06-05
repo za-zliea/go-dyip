@@ -27,6 +27,13 @@ A ddns client and server [GitHub](https://github.com/za-zliea/go-dyip)
 - Google have no api to query DNS, use net.LookupIP instead.
 - Google use Dynamic DNS which has HTTP API.
 
+### Support Protocol
+- IPV4
+- IPV6
+
+### Support Local IP
+Allow client to use local interface IP by setting interface name.
+
 ## Build
 
 ### Prerequirements
@@ -121,6 +128,7 @@ ips:
   subdomain: your-subdomain          # Subdomain
   auth: your-doamin-token-abce12345  # Client and server domain auth token
   protocol: IPV4                     # IPV4/IPV6 protocol
+  local: false                       # Use Local Interface IP
 ```
 
 ### Client Config
@@ -132,4 +140,6 @@ domain: your-subdomain.your-doamin   # Full domain
 auth: your-doamin-token-abce12345    # Client and server domain auth token
 interval: 300                        # Sync interval (second)
 protocol: IPV4                       # IPV4/IPV6 protocol
+local: false                         # Use Local Upload IP
+interface: eth0                      # Local Interface Name (Optional)
 ```

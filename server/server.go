@@ -54,14 +54,18 @@ func SyncHandler(ctx *atreugo.RequestCtx) error {
 	}
 
 	var ip string
-	if MetaData.RealIp == nil || *MetaData.RealIp == "" {
-		ip = ctx.RemoteIP().String()
+	if ipMeta.Local {
+		ip = string(ctx.QueryArgs().Peek("localip"))
 	} else {
-		ip = string(ctx.Request.Header.Peek(*MetaData.RealIp))
-	}
-	if ip == "" {
-		log.Printf("sync %s.%s-%s error: no ip\n", ipMeta.Subdomain, ipMeta.Domain, ip)
-		return ctx.JSONResponse(Failed("no ip"), 200)
+		if MetaData.RealIp == nil || *MetaData.RealIp == "" {
+			ip = ctx.RemoteIP().String()
+		} else {
+			ip = string(ctx.Request.Header.Peek(*MetaData.RealIp))
+		}
+		if ip == "" {
+			log.Printf("sync %s.%s-%s error: no ip\n", ipMeta.Subdomain, ipMeta.Domain, ip)
+			return ctx.JSONResponse(Failed("no ip"), 200)
+		}
 	}
 
 	protocol, err := util.GetIpFamily(ip)
