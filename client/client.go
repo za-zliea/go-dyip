@@ -31,6 +31,7 @@ func Sync() error {
 
 	params.Set("domain", MetaData.Domain)
 	params.Set("auth", MetaData.Auth)
+	params.Set("protocol", string(MetaData.Protocol))
 
 	if MetaData.Local {
 		iface, err := net.InterfaceByName(MetaData.Interface)

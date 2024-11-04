@@ -181,8 +181,14 @@ func authGlobal(ctx *atreugo.RequestCtx) ResponseDTO {
 func authDomain(ctx *atreugo.RequestCtx) (*meta.IpMeta, error) {
 	domain := string(ctx.QueryArgs().Peek("domain"))
 	domainAuth := string(ctx.QueryArgs().Peek("auth"))
+	protocolBytes := ctx.QueryArgs().Peek("protocol")
 
-	ipMeta, ok := MetaData.MetaMap[domain]
+	protocol := meta.IPV4
+	if protocolBytes != nil {
+		protocol = meta.Protocol(protocolBytes)
+	}
+
+	ipMeta, ok := MetaData.MetaMap[domain+"."+string(protocol)]
 	if !ok {
 		return nil, errors.New(fmt.Sprintf("domain %s auth failed", domain))
 	}

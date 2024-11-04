@@ -52,7 +52,7 @@ func (s *ServerMeta) GenerateIpm() {
 	metaMap := make(map[string]*IpMeta)
 
 	for i := 0; i < len(s.Metas); i += 1 {
-		metaMap[s.Metas[i].Subdomain+"."+s.Metas[i].Domain] = s.Metas[i]
+		metaMap[s.Metas[i].Subdomain+"."+s.Metas[i].Domain+"."+string(s.Metas[i].Protocol)] = s.Metas[i]
 	}
 
 	s.MetaMap = metaMap
