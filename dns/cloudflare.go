@@ -176,7 +176,6 @@ func (c Cloudflare) cloudflareId(ipMeta *meta.IpMeta) (*CloudflareId, error) {
 
 		query := req.URL.Query()
 		query.Add("name", ipMeta.Domain)
-		query.Add("type", meta.GetProtocolDns(ipMeta.Protocol))
 		query.Add("status", "active")
 		req.URL.RawQuery = query.Encode()
 
@@ -197,7 +196,7 @@ func (c Cloudflare) cloudflareId(ipMeta *meta.IpMeta) (*CloudflareId, error) {
 			return nil, err
 		}
 
-		if zoneResponse.Result[0] == nil {
+		if zoneResponse.Result == nil || len(zoneResponse.Result) == 0 || zoneResponse.Result[0] == nil {
 			return nil, errors.New("empty zone")
 		}
 
