@@ -26,6 +26,10 @@ type IpmResponse struct {
 	History   []string `json:"history"`
 }
 
+func IndexHandler(ctx *atreugo.RequestCtx) error {
+	return ctx.JSONResponse(Success())
+}
+
 func IpHandler(ctx *atreugo.RequestCtx) error {
 	auth := authGlobal(ctx)
 	if !auth.IsSuccess() {

@@ -67,6 +67,7 @@ func main() {
 	}
 	atreugoServer := atreugo.New(config)
 
+	atreugoServer.GET("/", server.IndexHandler)
 	atreugoServer.GET("/sync", server.SyncHandler)
 	atreugoServer.GET("/load", server.LoadHandler)
 	atreugoServer.GET("/ip", server.IpHandler)
