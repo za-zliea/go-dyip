@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM zliea/alpine:3
 
 ENV CONFIG_DIR=/etc/dyip
 
