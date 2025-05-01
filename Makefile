@@ -56,6 +56,7 @@ push-alpine:
 	docker push zliea/dyip-server:alpine
 clean:
 	rm -Rf $(OUTPUT_DIR)
+	go clean --cache
 version:
 	if [ -n "$(VERSION)" ]; then mv $(OUTPUT_DIR)/dyip-client_windows_x64.exe $(OUTPUT_DIR)/dyip-client_$(VERSION)_windows_x64.exe; fi
 	if [ -n "$(VERSION)" ]; then mv $(OUTPUT_DIR)/dyip-client_windows_x86.exe $(OUTPUT_DIR)/dyip-client_$(VERSION)_windows_x86.exe; fi
