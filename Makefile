@@ -7,7 +7,7 @@ build-all:
 	go mod download
 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client_windows_x64.exe client.go
 	CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o $(OUTPUT_DIR)/dyip-client_windows_x86.exe client.go
-	CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-client_windows_x86.exe client.go
+	CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-client_windows_arm64.exe client.go
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client_linux_x64 client.go
 	CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o $(OUTPUT_DIR)/dyip-client_linux_x86 client.go
 	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-client_linux_arm64 client.go
@@ -15,7 +15,7 @@ build-all:
 	CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-client_darwin_arm64 client.go
 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-server_windows_x64.exe server.go
 	CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o $(OUTPUT_DIR)/dyip-server_windows_x86.exe server.go
-	CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-server_windows_x86.exe server.go
+	CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-server_windows_arm64.exe server.go
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-server_linux_x64 server.go
 	CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o $(OUTPUT_DIR)/dyip-server_linux_x86 server.go
 	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-server_linux_arm64 server.go
