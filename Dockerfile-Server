@@ -1,4 +1,4 @@
-FROM ubuntu:focal
+FROM zliea/ubuntu:focal
 
 ENV CONFIG_DIR=/etc/dyip
 
