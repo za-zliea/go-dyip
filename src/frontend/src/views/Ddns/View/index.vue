@@ -155,7 +155,7 @@ onMounted(fetchList)
         </el-table-column>
         <el-table-column :label="t('ddnsView.columnProtocol')" width="100">
           <template #default="{ row }">
-            <el-tag :type="row.protocol === 'IPV6' ? 'success' : 'info'" effect="dark">
+            <el-tag :type="row.protocol === 'IPV6' ? 'primary' : 'success'" effect="dark">
               {{ row.protocol === 'IPV6' ? t('ddnsView.tagProtocolV6') : t('ddnsView.tagProtocolV4') }}
             </el-tag>
           </template>
@@ -243,7 +243,7 @@ onMounted(fetchList)
               </el-tag>
             </el-descriptions-item>
             <el-descriptions-item :label="t('ddnsView.detail.protocol')">
-              <el-tag :type="detailRow.protocol === 'IPV6' ? 'success' : 'info'" effect="dark">
+              <el-tag :type="detailRow.protocol === 'IPV6' ? 'primary' : 'success'" effect="dark">
                 {{ detailRow.protocol === 'IPV6' ? t('ddnsView.tagProtocolV6') : t('ddnsView.tagProtocolV4') }}
               </el-tag>
             </el-descriptions-item>

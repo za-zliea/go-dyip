@@ -45,10 +45,28 @@ Each server record (`ips[].synctype`) and the client (`synctype`) carries a two-
 
 - golang
 - make
+- node + pnpm (only to build the embedded web UI; see Frontend below)
+
+### Frontend (embedded web UI)
+
+The admin SPA source lives in `src/frontend/` (vue-element-plus-admin, mini branch). Its build output `src/frontend/dist/` is embedded into `dyip-server` via `//go:embed`, so **`go build src/server.go` fails unless `src/frontend/dist/` exists**. Build it once before building the server:
+
+```shell
+make frontend-build      # = cd src/frontend && pnpm install --frozen-lockfile=false && pnpm build
+```
+
+Build config lives in `vite.config.ts` (there is no `.env`). The build is **root-anchored**: `base: '/'` emits absolute asset URLs (`/assets/...`), and the API is called via absolute paths (`/front/api/...`). The SPA must be served at the site root — a sub-path deploy (e.g. behind a `/xxx-dyip/` reverse proxy) requires reconfiguring `base` and the API path prefixes.
+
+For local development with hot reload, run the dev server alongside `dyip-server` (vite on `:5173`, proxies `/front` **and** `/api` to `$DYIP_DEV_SERVER` or `http://localhost:8080`):
+
+```shell
+cd src/frontend && pnpm dev
+```
 
 ### Without Docker
 
 ```shell
+make frontend-build   # build the web UI into src/frontend/dist (first run only / after UI changes)
 make all
 ```
 

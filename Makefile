@@ -2,7 +2,31 @@ MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 MKFILE_DIR := $(dir $(MKFILE_PATH))
 OUTPUT_DIR := $(MKFILE_DIR)output
 
-build-all:
+.PHONY: all build build-all clean docker docker-alpine frontend-build frontend-clean image image-alpine image-push image-alpine-push push push-alpine release version
+
+frontend-clean:
+	@if command -v pnpm >/dev/null 2>&1; then \
+    	echo ">> cleaning frontend with pnpm"; \
+    	cd src/frontend && pnpm clean; \
+    elif command -v npx >/dev/null 2>&1; then \
+    	echo ">> pnpm not found, falling back to npx pnpm via corepack"; \
+    	cd src/frontend && npx --yes pnpm@9 clean; \
+    else \
+    	echo "!! pnpm/npx not found — skipping frontend clean (using existing src/frontend/dist if any)"; \
+    fi
+
+frontend-build:
+	@if command -v pnpm >/dev/null 2>&1; then \
+		echo ">> building frontend with pnpm"; \
+		cd src/frontend && pnpm install --frozen-lockfile=false && pnpm build; \
+	elif command -v npx >/dev/null 2>&1; then \
+		echo ">> pnpm not found, falling back to npx pnpm via corepack"; \
+		cd src/frontend && npx --yes pnpm@9 install --frozen-lockfile=false && npx --yes pnpm@9 build; \
+	else \
+		echo "!! pnpm/npx not found — skipping frontend build (using existing src/frontend/dist if any)"; \
+	fi
+
+build-all: frontend-build
 	if [ ! -d $(OUTPUT_DIR) ]; then mkdir $(OUTPUT_DIR); else rm -Rf $(OUTPUT_DIR)/*; fi
 	go mod download
 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client_windows_x64.exe src/client.go
@@ -21,7 +45,7 @@ build-all:
 	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-server_linux_arm64 src/server.go
 	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-server_darwin_x64 src/server.go
 	CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-server_darwin_arm64 src/server.go
-build:
+build: frontend-build
 	if [ ! -d $(OUTPUT_DIR) ]; then mkdir $(OUTPUT_DIR); else rm -Rf $(OUTPUT_DIR)/*; fi
 	go mod download
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client src/client.go
@@ -56,7 +80,7 @@ push-alpine:
 	docker push zliea/dyip-client:alpine
 	if [ -n "$(VERSION)" ]; then docker push zliea/dyip-server:$(VERSION)-alpine; fi
 	docker push zliea/dyip-server:alpine
-clean:
+clean: frontend-clean
 	rm -Rf $(OUTPUT_DIR)
 	go clean --cache
 version:
