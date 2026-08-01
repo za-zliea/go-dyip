@@ -2,7 +2,7 @@ package dns
 
 import (
 	"bytes"
-	"dyip-sync/meta"
+	meta2 "dyip-sync/src/meta"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -29,7 +29,7 @@ type GodaddyErrorResponse struct {
 	Message string `json:"message"`
 }
 
-func (g Godaddy) Query(ipMeta *meta.IpMeta) (string, error) {
+func (g Godaddy) Query(ipMeta *meta2.IpMeta) (string, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", g.godaddyUrl(ipMeta), nil)
 	if err != nil {
@@ -72,8 +72,8 @@ func (g Godaddy) Query(ipMeta *meta.IpMeta) (string, error) {
 	}
 }
 
-func (g Godaddy) Sync(ipMeta *meta.IpMeta) error {
-	godaddyData := GodaddyData{Data: *ipMeta.Ip, Name: ipMeta.Subdomain, Ttl: 600, Type: meta.GetProtocolDns(ipMeta.Protocol)}
+func (g Godaddy) Sync(ipMeta *meta2.IpMeta) error {
+	godaddyData := GodaddyData{Data: *ipMeta.Ip, Name: ipMeta.Subdomain, Ttl: 600, Type: meta2.GetProtocolDns(ipMeta.Protocol)}
 
 	data := []GodaddyData{godaddyData}
 
@@ -116,10 +116,10 @@ func (g Godaddy) Sync(ipMeta *meta.IpMeta) error {
 	}
 }
 
-func (Godaddy) godaddyUrl(ipMeta *meta.IpMeta) string {
-	return fmt.Sprintf("https://api.godaddy.com/v1/domains/%s/records/%s/%s", ipMeta.Domain, meta.GetProtocolDns(ipMeta.Protocol), ipMeta.Subdomain)
+func (Godaddy) godaddyUrl(ipMeta *meta2.IpMeta) string {
+	return fmt.Sprintf("https://api.godaddy.com/v1/domains/%s/records/%s/%s", ipMeta.Domain, meta2.GetProtocolDns(ipMeta.Protocol), ipMeta.Subdomain)
 }
 
-func (Godaddy) godaddyAuthorization(ipMeta *meta.IpMeta) string {
+func (Godaddy) godaddyAuthorization(ipMeta *meta2.IpMeta) string {
 	return fmt.Sprintf("sso-key %s:%s", ipMeta.Accesskey, ipMeta.AccessKeySecret)
 }

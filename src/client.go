@@ -1,9 +1,9 @@
 package main
 
 import (
-	"dyip-sync/client"
-	"dyip-sync/config"
-	"dyip-sync/meta"
+	"dyip-sync/src/client"
+	"dyip-sync/src/config"
+	"dyip-sync/src/meta"
 	"flag"
 	"fmt"
 	"os"

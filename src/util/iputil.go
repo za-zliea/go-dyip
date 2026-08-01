@@ -1,7 +1,7 @@
 package util
 
 import (
-	"dyip-sync/meta"
+	"dyip-sync/src/meta"
 	"errors"
 	"fmt"
 	"net"

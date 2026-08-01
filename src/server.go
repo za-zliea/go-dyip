@@ -1,13 +1,14 @@
 package main
 
 import (
-	"dyip-sync/config"
-	"dyip-sync/meta"
-	"dyip-sync/server"
+	"dyip-sync/src/config"
+	"dyip-sync/src/meta"
+	"dyip-sync/src/server"
 	"flag"
 	"fmt"
-	"github.com/savsgio/atreugo/v11"
 	"os"
+
+	"github.com/savsgio/atreugo/v11"
 )
 
 var (

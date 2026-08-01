@@ -84,3 +84,44 @@ output/
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
+### Ai template
+# Local configuration file for AI tools
+.claude
+CLAUDE.md
+
+
+### Node template
+logs/
+*.log
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+
+# build / generate output
+dist/
+dist-*/
+
+# Embedded admin SPA build output (consumed by src/frontend/embed.go).
+# The generic `dist/` rule above already matches this path, but listing it
+# explicitly documents the intent.
+src/frontend/dist/
+

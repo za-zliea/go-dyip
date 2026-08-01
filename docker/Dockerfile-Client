@@ -1,4 +1,4 @@
-FROM zliea/ubuntu:focal
+FROM zliea/ubuntu:noble
 
 ENV CONFIG_DIR=/etc/dyip
 
@@ -9,7 +9,7 @@ RUN apt-get update \
  && mkdir ${CONFIG_DIR}
 
 ADD output/dyip-client /usr/local/bin
-ADD script/docker-entrypoint-client.sh /usr/local/bin/docker-entrypoint.sh
+ADD docker/docker-entrypoint-client.sh /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["dyip-client"]

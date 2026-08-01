@@ -26,6 +26,8 @@ A ddns client and server [GitHub](https://github.com/za-zliea/go-dyip)
 
 - Google have no api to query DNS, use net.LookupIP instead.
 - Google use Dynamic DNS which has HTTP API.
+- Cloudflare authenticate with the API Token as `sk` (Bearer token); `ak` is unused.
+- Google authenticate with HTTP Basic Auth: `ak` is the username, `sk` is the password.
 
 ### Support Protocol
 - IPV4
@@ -51,7 +53,7 @@ make all
 
 ```shell
 make image VERSION=[GIT TAG]
-make image-apline VERSION=[GIT TAG]
+make image-alpine VERSION=[GIT TAG]
 ```
 
 ## Usage
@@ -121,7 +123,7 @@ port: 8080                           # Listen port
 realip: x-real-ip                    # IP to sync from header, use remote address if empty
 token: your-token-abcde12345         # Client and server auth token
 ips:
-- provider: your-provider            # Support Provider (NONE/TENCENT/ALIYUN/GODADDY/GOOGLE)
+- provider: your-provider            # Support Provider (NONE/TENCENT/ALIYUN/GODADDY/GOOGLE/CLOUDFLARE)
   ak: abcde12345                     # Provider ak (USERNAME/AccessKey ID ...)
   sk: abcde12345                     # Provider sk (PASSWORD/AccessKey Secret ...)
   domain: your-doamin                # Domain

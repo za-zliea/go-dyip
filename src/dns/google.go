@@ -1,7 +1,7 @@
 package dns
 
 import (
-	"dyip-sync/meta"
+	"dyip-sync/src/meta"
 	"errors"
 	"fmt"
 	"io/ioutil"

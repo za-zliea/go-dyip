@@ -5,43 +5,43 @@ OUTPUT_DIR := $(MKFILE_DIR)output
 build-all:
 	if [ ! -d $(OUTPUT_DIR) ]; then mkdir $(OUTPUT_DIR); else rm -Rf $(OUTPUT_DIR)/*; fi
 	go mod download
-	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client_windows_x64.exe client.go
-	CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o $(OUTPUT_DIR)/dyip-client_windows_x86.exe client.go
-	CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-client_windows_arm64.exe client.go
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client_linux_x64 client.go
-	CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o $(OUTPUT_DIR)/dyip-client_linux_x86 client.go
-	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-client_linux_arm64 client.go
-	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client_darwin_x64 client.go
-	CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-client_darwin_arm64 client.go
-	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-server_windows_x64.exe server.go
-	CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o $(OUTPUT_DIR)/dyip-server_windows_x86.exe server.go
-	CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-server_windows_arm64.exe server.go
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-server_linux_x64 server.go
-	CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o $(OUTPUT_DIR)/dyip-server_linux_x86 server.go
-	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-server_linux_arm64 server.go
-	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-server_darwin_x64 server.go
-	CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-server_darwin_arm64 server.go
+	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client_windows_x64.exe src/client.go
+	CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o $(OUTPUT_DIR)/dyip-client_windows_x86.exe src/client.go
+	CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-client_windows_arm64.exe src/client.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client_linux_x64 src/client.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o $(OUTPUT_DIR)/dyip-client_linux_x86 src/client.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-client_linux_arm64 src/client.go
+	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client_darwin_x64 src/client.go
+	CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-client_darwin_arm64 src/client.go
+	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-server_windows_x64.exe src/server.go
+	CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o $(OUTPUT_DIR)/dyip-server_windows_x86.exe src/server.go
+	CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-server_windows_arm64.exe src/server.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-server_linux_x64 src/server.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o $(OUTPUT_DIR)/dyip-server_linux_x86 src/server.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-server_linux_arm64 src/server.go
+	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-server_darwin_x64 src/server.go
+	CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o $(OUTPUT_DIR)/dyip-server_darwin_arm64 src/server.go
 build:
 	if [ ! -d $(OUTPUT_DIR) ]; then mkdir $(OUTPUT_DIR); else rm -Rf $(OUTPUT_DIR)/*; fi
 	go mod download
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client client.go
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-server server.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client src/client.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-server src/server.go
 docker:
-	docker pull zliea/ubuntu:focal
-	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-client:$(VERSION)-ubuntu -f Dockerfile-Client .; fi
-	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-client:$(VERSION) -f Dockerfile-Client .; fi
-	docker build -t zliea/dyip-client:ubuntu -f Dockerfile-Client .
-	docker build -t zliea/dyip-client:latest -f Dockerfile-Client .
-	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-server:$(VERSION)-ubuntu -f Dockerfile-Server .; fi
-	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-server:$(VERSION) -f Dockerfile-Server .; fi
-	docker build -t zliea/dyip-server:ubuntu -f Dockerfile-Server .
-	docker build -t zliea/dyip-server:latest -f Dockerfile-Server .
+	docker pull zliea/ubuntu:noble
+	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-client:$(VERSION)-ubuntu -f docker/Dockerfile-Client .; fi
+	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-client:$(VERSION) -f docker/Dockerfile-Client .; fi
+	docker build -t zliea/dyip-client:ubuntu -f docker/Dockerfile-Client .
+	docker build -t zliea/dyip-client:latest -f docker/Dockerfile-Client .
+	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-server:$(VERSION)-ubuntu -f docker/Dockerfile-Server .; fi
+	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-server:$(VERSION) -f docker/Dockerfile-Server .; fi
+	docker build -t zliea/dyip-server:ubuntu -f docker/Dockerfile-Server .
+	docker build -t zliea/dyip-server:latest -f docker/Dockerfile-Server .
 docker-alpine:
-	docker pull alpine:latest
-	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-client:$(VERSION)-alpine -f Dockerfile-Client-Alpine .; fi
-	docker build -t zliea/dyip-client:alpine -f Dockerfile-Client-Alpine .
-	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-server:$(VERSION)-alpine -f Dockerfile-Server-Alpine .; fi
-	docker build -t zliea/dyip-server:alpine -f Dockerfile-Server-Alpine .
+	docker pull alpine:3
+	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-client:$(VERSION)-alpine -f docker/Dockerfile-Client-Alpine .; fi
+	docker build -t zliea/dyip-client:alpine -f docker/Dockerfile-Client-Alpine .
+	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-server:$(VERSION)-alpine -f docker/Dockerfile-Server-Alpine .; fi
+	docker build -t zliea/dyip-server:alpine -f docker/Dockerfile-Server-Alpine .
 push:
 	if [ -n "$(VERSION)" ]; then docker push zliea/dyip-client:$(VERSION)-ubuntu; fi
 	if [ -n "$(VERSION)" ]; then docker push zliea/dyip-client:$(VERSION); fi

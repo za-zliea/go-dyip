@@ -2,7 +2,7 @@ package dns
 
 import (
 	"bytes"
-	"dyip-sync/meta"
+	meta2 "dyip-sync/src/meta"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -64,7 +64,7 @@ type CloudflareId struct {
 	RecordId string
 }
 
-func (c Cloudflare) Query(ipMeta *meta.IpMeta) (string, error) {
+func (c Cloudflare) Query(ipMeta *meta2.IpMeta) (string, error) {
 	client := &http.Client{}
 
 	url, err := c.cloudflareUrl(ipMeta)
@@ -102,8 +102,8 @@ func (c Cloudflare) Query(ipMeta *meta.IpMeta) (string, error) {
 	}
 }
 
-func (c Cloudflare) Sync(ipMeta *meta.IpMeta) error {
-	cloudflareData := CloudflareData{Content: *ipMeta.Ip, Name: fmt.Sprintf("%s.%s", ipMeta.Subdomain, ipMeta.Domain), Ttl: 300, Type: meta.GetProtocolDns(ipMeta.Protocol), Proxied: false}
+func (c Cloudflare) Sync(ipMeta *meta2.IpMeta) error {
+	cloudflareData := CloudflareData{Content: *ipMeta.Ip, Name: fmt.Sprintf("%s.%s", ipMeta.Subdomain, ipMeta.Domain), Ttl: 300, Type: meta2.GetProtocolDns(ipMeta.Protocol), Proxied: false}
 
 	reqBody, err := json.Marshal(&cloudflareData)
 	if err != nil {
@@ -148,7 +148,7 @@ func (c Cloudflare) Sync(ipMeta *meta.IpMeta) error {
 	}
 }
 
-func (c Cloudflare) cloudflareUrl(ipMeta *meta.IpMeta) (string, error) {
+func (c Cloudflare) cloudflareUrl(ipMeta *meta2.IpMeta) (string, error) {
 	cloudflareId, err := c.cloudflareId(ipMeta)
 
 	if err != nil {
@@ -158,11 +158,11 @@ func (c Cloudflare) cloudflareUrl(ipMeta *meta.IpMeta) (string, error) {
 	return fmt.Sprintf("https://api.cloudflare.com/client/v4/zones/%s/dns_records/%s", cloudflareId.ZoneId, cloudflareId.RecordId), nil
 }
 
-func (Cloudflare) cloudflareAuthorization(ipMeta *meta.IpMeta) string {
+func (Cloudflare) cloudflareAuthorization(ipMeta *meta2.IpMeta) string {
 	return fmt.Sprintf("Bearer %s", ipMeta.AccessKeySecret)
 }
 
-func (c Cloudflare) cloudflareId(ipMeta *meta.IpMeta) (*CloudflareId, error) {
+func (c Cloudflare) cloudflareId(ipMeta *meta2.IpMeta) (*CloudflareId, error) {
 	fullDomain := fmt.Sprintf("%s.%s", ipMeta.Subdomain, ipMeta.Domain)
 	cloudflareId, ok := cloudflareIdMap[fullDomain]
 
@@ -210,7 +210,7 @@ func (c Cloudflare) cloudflareId(ipMeta *meta.IpMeta) (*CloudflareId, error) {
 
 		query = req.URL.Query()
 		query.Add("name", fullDomain)
-		query.Add("type", meta.GetProtocolDns(ipMeta.Protocol))
+		query.Add("type", meta2.GetProtocolDns(ipMeta.Protocol))
 		req.URL.RawQuery = query.Encode()
 
 		rsp, err = client.Do(req)

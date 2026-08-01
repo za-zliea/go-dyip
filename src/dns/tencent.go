@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"crypto/hmac"
 	"crypto/sha256"
-	"dyip-sync/meta"
+	meta2 "dyip-sync/src/meta"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
@@ -88,7 +88,7 @@ type TencentRecordResponse struct {
 
 const TENCENT_URL = "https://dnspod.tencentcloudapi.com"
 
-func (t Tencent) Query(ipMeta *meta.IpMeta) (string, error) {
+func (t Tencent) Query(ipMeta *meta2.IpMeta) (string, error) {
 	recordData, err := t.query(ipMeta)
 
 	if err != nil {
@@ -98,8 +98,8 @@ func (t Tencent) Query(ipMeta *meta.IpMeta) (string, error) {
 	return recordData.Value, nil
 }
 
-func (t Tencent) query(ipMeta *meta.IpMeta) (*TencentRecordData, error) {
-	data := TencentRequest{Domain: ipMeta.Domain, Subdomain: ipMeta.Subdomain, RecordType: meta.GetProtocolDns(ipMeta.Protocol)}
+func (t Tencent) query(ipMeta *meta2.IpMeta) (*TencentRecordData, error) {
+	data := TencentRequest{Domain: ipMeta.Domain, Subdomain: ipMeta.Subdomain, RecordType: meta2.GetProtocolDns(ipMeta.Protocol)}
 
 	reqBody, err := json.Marshal(&data)
 	if err != nil {
@@ -145,7 +145,7 @@ func (t Tencent) query(ipMeta *meta.IpMeta) (*TencentRecordData, error) {
 	return response.Response.RecordList[0], nil
 }
 
-func (t Tencent) Sync(ipMeta *meta.IpMeta) error {
+func (t Tencent) Sync(ipMeta *meta2.IpMeta) error {
 	recordData, err := t.query(ipMeta)
 
 	if err != nil {
@@ -156,7 +156,7 @@ func (t Tencent) Sync(ipMeta *meta.IpMeta) error {
 		RecordId:     recordData.RecordId,
 		Domain:       ipMeta.Domain,
 		SubDomain:    ipMeta.Subdomain,
-		RecordType:   meta.GetProtocolDns(ipMeta.Protocol),
+		RecordType:   meta2.GetProtocolDns(ipMeta.Protocol),
 		RecordLine:   "默认",
 		RecordLineId: "0",
 		Value:        *ipMeta.Ip,
@@ -215,7 +215,7 @@ func (Tencent) hmacsha256(content []byte, key []byte) []byte {
 	return hashed.Sum(nil)
 }
 
-func (t Tencent) tencentSign(ipMeta *meta.IpMeta, action string, payload []byte, request *http.Request) {
+func (t Tencent) tencentSign(ipMeta *meta2.IpMeta, action string, payload []byte, request *http.Request) {
 	host := "dnspod.tencentcloudapi.com"
 	algorithm := "TC3-HMAC-SHA256"
 	service := "dnspod"

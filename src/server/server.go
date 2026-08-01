@@ -1,18 +1,19 @@
 package server
 
 import (
-	"dyip-sync/config"
-	"dyip-sync/dns"
-	"dyip-sync/meta"
-	"dyip-sync/util"
+	"dyip-sync/src/config"
+	"dyip-sync/src/dns"
+	meta2 "dyip-sync/src/meta"
+	"dyip-sync/src/util"
 	"errors"
 	"fmt"
-	"github.com/savsgio/atreugo/v11"
 	"log"
+
+	"github.com/savsgio/atreugo/v11"
 )
 
 var ConfigFileServer string
-var MetaData meta.ServerMeta
+var MetaData meta2.ServerMeta
 
 type IpResponse struct {
 	Ip string `json:"ip"`
@@ -182,14 +183,14 @@ func authGlobal(ctx *atreugo.RequestCtx) ResponseDTO {
 	return response
 }
 
-func authDomain(ctx *atreugo.RequestCtx) (*meta.IpMeta, error) {
+func authDomain(ctx *atreugo.RequestCtx) (*meta2.IpMeta, error) {
 	domain := string(ctx.QueryArgs().Peek("domain"))
 	domainAuth := string(ctx.QueryArgs().Peek("auth"))
 	protocolBytes := ctx.QueryArgs().Peek("protocol")
 
-	protocol := meta.IPV4
+	protocol := meta2.IPV4
 	if protocolBytes != nil {
-		protocol = meta.Protocol(protocolBytes)
+		protocol = meta2.Protocol(protocolBytes)
 	}
 
 	ipMeta, ok := MetaData.MetaMap[domain+"."+string(protocol)]
