@@ -50,7 +50,7 @@ func SyncHandler(ctx *atreugo.RequestCtx) error {
 	}
 
 	var ip string
-	if ipMeta.Local {
+	if dymeta.IsLocalIp(ipMeta.SyncType) {
 		ip = string(ctx.QueryArgs().Peek("localip"))
 	} else {
 		ip = clientIP(ctx)

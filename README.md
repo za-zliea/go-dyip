@@ -34,8 +34,10 @@ A ddns client and server [GitHub](https://github.com/za-zliea/go-dyip)
 - IPV4
 - IPV6
 
-### Support Local IP
-Allow client to use local interface IP by setting interface name.
+### SyncType
+Each server record (`ips[].synctype`) and the client (`synctype`) carries a two-digit string:
+- **First digit — console update**: `1` lets the web UI push an IP to this record, `0` blocks it (403). Server-side only; ignored by the client.
+- **Last digit — IP source**: `1` ⇒ the client reads the local network interface and submits the IP (`localip`); `0` ⇒ the server derives the IP from the request (`realip` header / remote address). Set `interface` on the client when this is `1`.
 
 ## Build
 
@@ -108,7 +110,7 @@ Log in at `http://<server>:<port>/`. From the UI you can:
 
 - View all configured domains with their last synced IP and update time.
 - Inspect a single record: its live DNS IP vs. the recorded IP, and its history.
-- Trigger a manual sync to push a chosen IP to DNS.
+- Trigger a manual sync to push a chosen IP to DNS — only allowed for records whose `synctype` first digit is `1` (others return 403; see SyncType).
 
 The web UI authenticates with a JWT (HS256, 8h) signed with the server `token`. The machine sync API (`/api/sync`) is unaffected and still uses the global `token` + per-domain `auth`.
 
@@ -147,7 +149,7 @@ ips:
   subdomain: your-subdomain          # Subdomain
   auth: your-doamin-token-abce12345  # Client and server domain auth token
   protocol: IPV4                     # IPV4/IPV6 protocol
-  local: false                       # Use Local Interface IP
+  synctype: "00"                     # Two digits: [console 0/1][local-ip 0/1] (see SyncType)
 ```
 
 > The `admin` field is intentionally absent from the sample. On first start (and with `-g`), the server auto-generates an admin account: the password is bcrypt-hashed into `admin.password` and the **plaintext is printed once to the logs**. To reset the password, delete the `admin` block and restart.
@@ -161,6 +163,6 @@ domain: your-subdomain.your-doamin   # Full domain
 auth: your-doamin-token-abce12345    # Client and server domain auth token
 interval: 300                        # Sync interval (second)
 protocol: IPV4                       # IPV4/IPV6 protocol
-local: false                         # Use Local Upload IP
-interface: eth0                      # Local Interface Name (Optional)
+synctype: "00"                       # Two digits: client only uses the last (local-ip 0/1)
+interface: eth0                      # Local Interface Name (used when last digit is 1)
 ```

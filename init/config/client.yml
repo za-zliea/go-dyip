@@ -2,6 +2,6 @@ server: http://127.0.0.1:8080/
 token: your-token-abcde12345
 domain: your-subdomain.your-doamin
 protocol: IPV4
-local: false
+synctype: "00"
 auth: your-doamin-token-abce12345
 interval: 300

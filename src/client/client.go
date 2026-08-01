@@ -33,7 +33,7 @@ func Sync() error {
 	params.Set("auth", MetaData.Auth)
 	params.Set("protocol", string(MetaData.Protocol))
 
-	if MetaData.Local {
+	if dymeta.IsLocalIp(MetaData.SyncType) {
 		iface, err := net.InterfaceByName(MetaData.Interface)
 		if err != nil {
 			return err

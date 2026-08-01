@@ -171,6 +171,10 @@ func FrontSyncHandler(ctx *atreugo.RequestCtx) error {
 		return ctx.JSONResponse(FailedWithS("domain not found", 404), 404)
 	}
 
+	if !dymeta.ConsoleEnabled(ipMeta.SyncType) {
+		return ctx.JSONResponse(FailedWithS("console sync not supported for this domain", 403), 403)
+	}
+
 	if family != protocol {
 		return ctx.JSONResponse(FailedWithS("ip family does not match protocol", 400), 400)
 	}

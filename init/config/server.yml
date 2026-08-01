@@ -10,4 +10,4 @@ ips:
   subdomain: your-subdomain
   auth: your-doamin-token-abce12345
   protocol: IPV4
-  local: false
+  synctype: "00"
