@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"crypto/hmac"
 	"crypto/sha1"
-	meta2 "dyip-sync/src/meta"
+	dymeta "dyip-sync/src/meta"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -63,7 +63,7 @@ type AliyunRecordResponse struct {
 
 const ALIYUN_URL = "https://alidns.aliyuncs.com"
 
-func (a Aliyun) Query(ipMeta *meta2.IpMeta) (string, error) {
+func (a Aliyun) Query(ipMeta *dymeta.IpMeta) (string, error) {
 	recordData, err := a.query(ipMeta)
 
 	if err != nil {
@@ -73,11 +73,11 @@ func (a Aliyun) Query(ipMeta *meta2.IpMeta) (string, error) {
 	return recordData.Value, nil
 }
 
-func (a Aliyun) query(ipMeta *meta2.IpMeta) (*AliyunQueryRecordDataResponse, error) {
+func (a Aliyun) query(ipMeta *dymeta.IpMeta) (*AliyunQueryRecordDataResponse, error) {
 	params := make(map[string]string)
 
 	params["SubDomain"] = fmt.Sprintf("%s.%s", ipMeta.Subdomain, ipMeta.Domain)
-	params["Type"] = meta2.GetProtocolDns(ipMeta.Protocol)
+	params["Type"] = dymeta.GetProtocolDns(ipMeta.Protocol)
 	params["DomainName"] = ipMeta.Domain
 	params["Line"] = "default"
 
@@ -125,14 +125,14 @@ func (a Aliyun) query(ipMeta *meta2.IpMeta) (*AliyunQueryRecordDataResponse, err
 	return response.DomainRecords.Record[0], nil
 }
 
-func (a Aliyun) Sync(ipMeta *meta2.IpMeta) error {
+func (a Aliyun) Sync(ipMeta *dymeta.IpMeta) error {
 	recordData, err := a.query(ipMeta)
 
 	params := make(map[string]string)
 
 	params["RecordId"] = recordData.RecordId
 	params["RR"] = ipMeta.Subdomain
-	params["Type"] = meta2.GetProtocolDns(ipMeta.Protocol)
+	params["Type"] = dymeta.GetProtocolDns(ipMeta.Protocol)
 	params["Value"] = *ipMeta.Ip
 	params["TTL"] = "600"
 	params["Priority"] = "1"
@@ -178,7 +178,7 @@ func (a Aliyun) Sync(ipMeta *meta2.IpMeta) error {
 	return nil
 }
 
-func (t Aliyun) aliyunSign(ipMeta *meta2.IpMeta, action string, method string, params map[string]string) *url.Values {
+func (t Aliyun) aliyunSign(ipMeta *dymeta.IpMeta, action string, method string, params map[string]string) *url.Values {
 	params["Action"] = action
 	params["Version"] = "2015-01-09"
 	params["Format"] = "JSON"

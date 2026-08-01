@@ -7,6 +7,7 @@ import (
 	"dyip-sync/src/server"
 	"flag"
 	"fmt"
+	"log/slog"
 	"os"
 
 	"github.com/savsgio/atreugo/v11"
@@ -19,8 +20,8 @@ var (
 )
 
 func init() {
-	flag.StringVar(&configFileServer, "c", "server.conf", "config file path, default server.conf")
-	flag.BoolVar(&generateConfigServer, "g", false, "generate config, default server.conf")
+	flag.StringVar(&configFileServer, "c", "server.yml", "config file path, default server.yml")
+	flag.BoolVar(&generateConfigServer, "g", false, "generate config, default server.yml")
 	flag.BoolVar(&printUsageServer, "h", false, "print usage")
 
 	flag.Usage = serverUsage
@@ -37,6 +38,12 @@ func main() {
 	if generateConfigServer {
 		metaData := meta.ServerMeta{}
 		metaData.Generate()
+
+		if pw, generated := metaData.EnsureAdmin(); generated {
+			slog.Info("generated admin account", "username", metaData.Admin.UserName, "password", pw)
+			slog.Warn("please change the generated admin password after first login")
+		}
+
 		err := config.WriteConfig(configFileServer, &metaData)
 		if err != nil {
 			_, _ = fmt.Fprintln(os.Stderr, err)
@@ -60,6 +67,18 @@ func main() {
 	}
 
 	metaData.GenerateIpm()
+
+	if pw, generated := metaData.EnsureAdmin(); generated {
+		slog.Info("generated admin account on first run",
+			"username", metaData.Admin.UserName, "password", pw)
+		slog.Warn("please change the generated admin password after first login")
+		if err := config.WriteConfig(configFileServer, &metaData); err != nil {
+			slog.Error("failed to persist generated admin; password will rotate on next restart",
+				"error", err)
+		} else {
+			slog.Info("admin account persisted to config file", "path", configFileServer)
+		}
+	}
 
 	server.MetaData = metaData
 	server.ConfigFileServer = configFileServer
@@ -91,9 +110,15 @@ func main() {
 		},
 	})
 
-	atreugoServer.GET("/sync", server.SyncHandler)
-	atreugoServer.GET("/load", server.LoadHandler)
-	atreugoServer.GET("/ip", server.IpHandler)
+	atreugoServer.POST("/front/pub/login", server.LoginHandler)
+	atreugoServer.GET("/front/api/ip/self", server.FrontIpHandler)
+	atreugoServer.GET("/front/api/domain", server.FrontDomainHandler)
+	atreugoServer.GET("/front/api/{domain}/{subdomain}/{protocol}/info", server.FrontInfoHandler)
+	atreugoServer.POST("/front/api/{domain}/{subdomain}/{protocol}/sync", server.FrontSyncHandler)
+
+	atreugoServer.GET("/api/sync", server.SyncHandler)
+	//atreugoServer.GET("/api/load", server.LoadHandler)
+	//atreugoServer.GET("/api/ip", server.IpHandler)
 
 	err = atreugoServer.ListenAndServe()
 	if err != nil {

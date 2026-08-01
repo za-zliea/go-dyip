@@ -8,6 +8,7 @@ A ddns client and server [GitHub](https://github.com/za-zliea/go-dyip)
 
 - Base on [atreugo](https://github.com/savsgio/atreugo) Web Server Framework.
 - Use HTTP API to sync IP and DNS.
+- Embedded web admin UI: log in with an auto-generated admin account to view all domains, check live DNS status, and trigger a manual sync from the browser.
 
 ### Client
 
@@ -95,6 +96,22 @@ Options:
   -g	generate config, default client.yml
 ```
 
+### Admin Web UI
+
+The server serves an embedded web UI at `/`. On first start (or when generating a config with `-g`), an admin account is auto-generated — username `admin`, and a random 16-char password printed once to the logs:
+
+```
+generated admin account on first run username=admin password=xxxxxxxxxxxxxxxx
+```
+
+Log in at `http://<server>:<port>/`. From the UI you can:
+
+- View all configured domains with their last synced IP and update time.
+- Inspect a single record: its live DNS IP vs. the recorded IP, and its history.
+- Trigger a manual sync to push a chosen IP to DNS.
+
+The web UI authenticates with a JWT (HS256, 8h) signed with the server `token`. The machine sync API (`/api/sync`) is unaffected and still uses the global `token` + per-domain `auth`.
+
 ## Docker
 
 ### Server
@@ -132,6 +149,8 @@ ips:
   protocol: IPV4                     # IPV4/IPV6 protocol
   local: false                       # Use Local Interface IP
 ```
+
+> The `admin` field is intentionally absent from the sample. On first start (and with `-g`), the server auto-generates an admin account: the password is bcrypt-hashed into `admin.password` and the **plaintext is printed once to the logs**. To reset the password, delete the `admin` block and restart.
 
 ### Client Config
 
