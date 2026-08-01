@@ -2,6 +2,7 @@ package main
 
 import (
 	"dyip-sync/src/config"
+	"dyip-sync/src/frontend"
 	"dyip-sync/src/meta"
 	"dyip-sync/src/server"
 	"flag"
@@ -68,7 +69,28 @@ func main() {
 	}
 	atreugoServer := atreugo.New(config)
 
-	atreugoServer.GET("/", server.IndexHandler)
+	atreugoServer.StaticCustom("/", &atreugo.StaticFS{
+		FS:              frontend.FS,
+		IndexNames:      []string{"index.html"},
+		AllowEmptyRoot:  true,
+		Compress:        true,
+		CompressBrotli:  true,
+		AcceptByteRange: true,
+		// Browsers always send Accept-Encoding, which sends fasthttp down its
+		// on-demand-compression path. For the bare "/" that path resolves to an
+		// empty file path and embed.FS.Open("") fails with "invalid argument",
+		// so GET / returns 404 from a browser (curl hides it by omitting
+		// Accept-Encoding). Rewrite "/" to "/index.html" so the handler looks
+		// up a real file that compresses/serves normally. All other paths are
+		// left untouched.
+		PathRewrite: func(ctx *atreugo.RequestCtx) []byte {
+			if string(ctx.Path()) == "/" {
+				return []byte("/index.html")
+			}
+			return ctx.Path()
+		},
+	})
+
 	atreugoServer.GET("/sync", server.SyncHandler)
 	atreugoServer.GET("/load", server.LoadHandler)
 	atreugoServer.GET("/ip", server.IpHandler)
