@@ -152,7 +152,7 @@ func (c Cloudflare) cloudflareUrl(ipMeta *dymeta.IpMeta) (string, error) {
 	cloudflareId, err := c.cloudflareId(ipMeta)
 
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	return fmt.Sprintf("https://api.cloudflare.com/client/v4/zones/%s/dns_records/%s", cloudflareId.ZoneId, cloudflareId.RecordId), nil
@@ -230,7 +230,7 @@ func (c Cloudflare) cloudflareId(ipMeta *dymeta.IpMeta) (*CloudflareId, error) {
 			return nil, err
 		}
 
-		if dataQueryResponse.Result[0] == nil {
+		if dataQueryResponse.Result == nil || len(dataQueryResponse.Result) == 0 || dataQueryResponse.Result[0] == nil {
 			return nil, errors.New("empty dns")
 		}
 

@@ -72,16 +72,19 @@ type FrontHistoryEntry struct {
 
 // FrontInfoEntry is the full record for one subdomain.domain.PROTOCOL entry.
 type FrontInfoEntry struct {
-	Domain     string              `json:"domain"`
-	Subdomain  string              `json:"subdomain"`
-	Provider   string              `json:"provider"`
-	Protocol   dymeta.Protocol     `json:"protocol"`
-	Ip         string              `json:"ip,omitempty"`          // 记录的最新IP
-	UpdateTime string              `json:"update_time,omitempty"` // yyyy-MM-dd HH:mm:ss，未同步过则省略
-	Dip        string              `json:"dip,omitempty"`         // DNS 对应IP（实时查询）
-	Consistent bool                `json:"consistent"`            // 记录IP == DNS IP
-	History    []FrontHistoryEntry `json:"history"`               // 历史更新记录
-	DnsError   string              `json:"dns_error,omitempty"`   // 非致命，按条记录
+	Domain         string              `json:"domain"`
+	Subdomain      string              `json:"subdomain"`
+	Provider       string              `json:"provider"`
+	Protocol       dymeta.Protocol     `json:"protocol"`
+	Ip             string              `json:"ip,omitempty"`          // 记录的最新IP
+	UpdateTime     string              `json:"update_time,omitempty"` // yyyy-MM-dd HH:mm:ss，未同步过则省略
+	Dip            string              `json:"dip,omitempty"`         // DNS 对应IP（实时查询）
+	Consistent     bool                `json:"consistent"`            // 记录IP == DNS IP
+	History        []FrontHistoryEntry `json:"history"`               // 历史更新记录
+	DnsError       string              `json:"dns_error,omitempty"`   // 非致命，按条记录
+	SyncType       string              `json:"synctype,omitempty"`    // 原始两进制码，如 "11"
+	ConsoleEnabled bool                `json:"console_enabled"`       // 首位==1：是否支持控制台更新（=1x）
+	ClientUpload   bool                `json:"client_upload"`         // 末位==1：是否客户端上传IP
 }
 
 // FrontInfoHandler returns the full info for one subdomain.domain.PROTOCOL record.
@@ -109,11 +112,14 @@ func FrontInfoHandler(ctx *atreugo.RequestCtx) error {
 	}
 
 	entry := FrontInfoEntry{
-		Domain:    ipMeta.Domain,
-		Subdomain: ipMeta.Subdomain,
-		Provider:  ipMeta.Provider,
-		Protocol:  ipMeta.Protocol,
-		History:   history,
+		Domain:         ipMeta.Domain,
+		Subdomain:      ipMeta.Subdomain,
+		Provider:       ipMeta.Provider,
+		Protocol:       ipMeta.Protocol,
+		History:        history,
+		SyncType:       ipMeta.SyncType,
+		ConsoleEnabled: dymeta.ConsoleEnabled(ipMeta.SyncType),
+		ClientUpload:   dymeta.IsLocalIp(ipMeta.SyncType),
 	}
 	if ipMeta.Ip != nil {
 		entry.Ip = *ipMeta.Ip
@@ -123,8 +129,8 @@ func FrontInfoHandler(ctx *atreugo.RequestCtx) error {
 	}
 
 	if dip, err := dns.NewDns().Query(ipMeta); err != nil {
+		// DNS 查询失败不向前端返回报错，仅在服务端记录日志；Dip/Consistent 保持零值（空串/false）
 		log.Printf("front info %s.%s/%s query error: %v", subdomain, domain, protocol, err)
-		entry.DnsError = err.Error()
 	} else {
 		entry.Dip = dip
 		entry.Consistent = dip != "" && entry.Ip != "" && dip == entry.Ip
@@ -194,13 +200,16 @@ func FrontSyncHandler(ctx *atreugo.RequestCtx) error {
 
 // FrontDomainEntry is the summary of one configured domain record.
 type FrontDomainEntry struct {
-	Domain     string          `json:"domain"`                // 根域名 (apex)
-	Subdomain  string          `json:"subdomain"`             // 主机标签
-	Name       string          `json:"name"`                  // 完整域名 = subdomain+"."+domain
-	Provider   string          `json:"provider"`              // 域名提供商
-	Protocol   dymeta.Protocol `json:"protocol"`              // IPV4/IPV6
-	Ip         string          `json:"ip,omitempty"`          // 记录的最新IP
-	UpdateTime string          `json:"update_time,omitempty"` // yyyy-MM-dd HH:mm:ss
+	Domain         string          `json:"domain"`                // 根域名 (apex)
+	Subdomain      string          `json:"subdomain"`             // 主机标签
+	Name           string          `json:"name"`                  // 完整域名 = subdomain+"."+domain
+	Provider       string          `json:"provider"`              // 域名提供商
+	Protocol       dymeta.Protocol `json:"protocol"`              // IPV4/IPV6
+	Ip             string          `json:"ip,omitempty"`          // 记录的最新IP
+	UpdateTime     string          `json:"update_time,omitempty"` // yyyy-MM-dd HH:mm:ss
+	SyncType       string          `json:"synctype,omitempty"`    // 原始两进制码，如 "11"
+	ConsoleEnabled bool            `json:"console_enabled"`       // 首位==1：是否支持控制台更新（=1x）
+	ClientUpload   bool            `json:"client_upload"`         // 末位==1：是否客户端上传IP
 }
 
 // FrontDomainHandler returns a summary of every configured domain record (no DNS lookup).
@@ -213,11 +222,14 @@ func FrontDomainHandler(ctx *atreugo.RequestCtx) error {
 	entries := make([]FrontDomainEntry, 0, len(MetaData.Metas))
 	for _, m := range MetaData.Metas {
 		entry := FrontDomainEntry{
-			Domain:    m.Domain,
-			Subdomain: m.Subdomain,
-			Name:      m.Subdomain + "." + m.Domain,
-			Provider:  m.Provider,
-			Protocol:  m.Protocol,
+			Domain:         m.Domain,
+			Subdomain:      m.Subdomain,
+			Name:           m.Subdomain + "." + m.Domain,
+			Provider:       m.Provider,
+			Protocol:       m.Protocol,
+			SyncType:       m.SyncType,
+			ConsoleEnabled: dymeta.ConsoleEnabled(m.SyncType),
+			ClientUpload:   dymeta.IsLocalIp(m.SyncType),
 		}
 		if m.Ip != nil {
 			entry.Ip = *m.Ip
