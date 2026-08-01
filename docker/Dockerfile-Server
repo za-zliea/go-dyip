@@ -1,4 +1,4 @@
-FROM zliea/ubuntu:noble
+FROM ubuntu:noble
 
 ENV CONFIG_DIR=/etc/dyip
 

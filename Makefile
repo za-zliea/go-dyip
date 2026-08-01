@@ -51,7 +51,7 @@ build: frontend-build
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-client src/client.go
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(OUTPUT_DIR)/dyip-server src/server.go
 docker:
-	docker pull zliea/ubuntu:noble
+	docker pull ubuntu:noble
 	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-client:$(VERSION)-ubuntu -f docker/Dockerfile-Client .; fi
 	if [ -n "$(VERSION)" ]; then docker build -t zliea/dyip-client:$(VERSION) -f docker/Dockerfile-Client .; fi
 	docker build -t zliea/dyip-client:ubuntu -f docker/Dockerfile-Client .
