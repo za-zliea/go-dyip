@@ -1,0 +1,13 @@
+address: 127.0.0.1
+port: 8080
+token: your-token-abcde12345
+realip: x-real-ip
+ips:
+- provider: your-provider (TENCENT/ALIYUN/GODADDY/GOOGLE/CLOUDFLARE)
+  ak: abcde12345
+  sk: abcde12345
+  domain: your-doamin
+  subdomain: your-subdomain
+  auth: your-doamin-token-abce12345
+  protocol: IPV4
+  local: false

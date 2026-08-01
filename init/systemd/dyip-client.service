@@ -8,7 +8,7 @@ Wants=network-online.target
 Type=simple
 User=nobody
 NoNewPrivileges=true
-ExecStart=/usr/local/bin/dyip-client -c /etc/dyip/client.conf
+ExecStart=/usr/local/bin/dyip-client -c /etc/dyip/client.yml
 Restart=on-failure
 
 [Install]

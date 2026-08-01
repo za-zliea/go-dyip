@@ -25,7 +25,7 @@ type IpMeta struct {
 func (s *ServerMeta) Generate() {
 	metas := make([]*IpMeta, 1)
 	ipMeta := IpMeta{
-		Provider:        "your-provider (TENCENT/ALIYUN/GODADDY/GOOGLE)",
+		Provider:        "your-provider (TENCENT/ALIYUN/GODADDY/GOOGLE/CLOUDFLARE)",
 		Accesskey:       "abcde12345",
 		AccessKeySecret: "abcde12345",
 		Domain:          "your-doamin",

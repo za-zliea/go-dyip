@@ -9,10 +9,10 @@ if [ ! -d ${CONFIG_DIR} ]; then
 fi
 
 if [[ $# = 1 ]] && [[ "$1" = 'dyip-client' ]]; then
-    if [ ! -f ${CONFIG_DIR}/client.conf ]; then
-        dyip-client -g -c ${CONFIG_DIR}/client.conf
+    if [ ! -f ${CONFIG_DIR}/client.yml ]; then
+        dyip-client -g -c ${CONFIG_DIR}/client.yml
     else
-        dyip-client -c ${CONFIG_DIR}/client.conf
+        dyip-client -c ${CONFIG_DIR}/client.yml
     fi
 else
     exec "$@"
